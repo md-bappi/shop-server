@@ -5,13 +5,42 @@ const createError = require("http-errors");
 const authRoute = require("./routes/authRoutes");
 const { errorResponse } = require("./controllers/ResponseControllers");
 const connectDB = require("./config/db");
+const cookieParser = require("cookie-parser");
+const rateLimit = require("express-rate-limit");
+const productRoute = require("./routes/productRoutes");
 
 const app = express();
 
-app.use(cors());
+const rateLimiter = rateLimit({
+  windowMs: 5 * 60 * 1000, // 5 minutes
+  max: 100,
+  message: "Too many requests, please try again later after 5 minutes",
+});
+
+// middlewares
+const allowedOrigins = ["http://localhost:5173", "http://localhost:3000"];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      console.log(origin);
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
+  })
+);
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(rateLimiter);
 
 app.use("/api/auth", authRoute);
+app.use("/api/v1/product", productRoute);
 
 // client error handling
 app.use((req, res, next) => {

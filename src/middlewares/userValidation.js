@@ -20,20 +20,22 @@ const signupValidator = async (req, res, next) => {
       });
     }
 
-    // Password length check
-    if (password.length < 8) {
-      return errorResponse(res, {
-        statusCode: 400,
-        message: "Password too weak",
-      });
-    }
-
     // Email format check
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return errorResponse(res, {
         statusCode: 400,
         message: "Invalid email",
+      });
+    }
+
+    // Password length check
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return errorResponse(res, {
+        statusCode: 400,
+        message: "Password must have 8+ chars, upper, lower, number & symbol",
       });
     }
 
@@ -60,10 +62,12 @@ const loginValidator = async (req, res, next) => {
     }
 
     // Password length check
-    if (password.length < 8) {
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).{8,}$/;
+    if (!passwordRegex.test(password)) {
       return errorResponse(res, {
         statusCode: 400,
-        message: "Password too weak",
+        message: "Password must have 8+ chars, upper, lower, number & symbol",
       });
     }
 
