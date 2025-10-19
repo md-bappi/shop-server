@@ -1,6 +1,7 @@
 const express = require("express");
 const { PORT } = require("./secret");
 const cors = require("cors");
+const path = require("path");
 const morgan = require("morgan");
 const createError = require("http-errors");
 const authRoute = require("./routes/authRoutes");
@@ -41,6 +42,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(rateLimiter);
+app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
 
 // api routes
 app.use("/api/auth", authRoute);
