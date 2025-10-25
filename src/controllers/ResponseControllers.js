@@ -1,6 +1,6 @@
 const successResponse = async (
   res,
-  { statusCode = 200, message = "success", payload = {} }
+  { statusCode = 200, message = "success", payload = [] }
 ) => {
   res.status(statusCode).json({
     success: true,

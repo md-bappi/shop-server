@@ -70,9 +70,7 @@ const allProducts = async (req, res, next) => {
     return successResponse(res, {
       statusCode: 200,
       message: "All products",
-      payload: {
-        allProducts,
-      },
+      payload: [...allProducts],
     });
   } catch (error) {
     console.error(error);
